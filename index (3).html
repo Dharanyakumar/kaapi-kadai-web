@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kaapi Kadai – Filter coffee house, Erode</title>
+<meta name="description" content="Responsive website for Kaapi Kadai, a filter coffee house. Practice project built during inplant training using HTML5, CSS3 and JavaScript.">
+<style>
+/* ---------- Design tokens ---------- */
+:root{
+  --leaf:#2f6b3f;
+  --leaf-dark:#1d4529;
+  --steel:#c9d1d5;
+  --steel-light:#eef1f2;
+  --bean:#33200f;
+  --turmeric:#e7b21a;
+  --paper:#f8f9f6;
+  --white:#ffffff;
+  --error:#b3261e;
+  --radius:14px;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{font-family:var(--sans);color:var(--bean);background:var(--paper);line-height:1.6;font-size:1rem}
+img,svg{max-width:100%;display:block}
+a{color:var(--leaf-dark)}
+:focus-visible{outline:3px solid var(--turmeric);outline-offset:2px}
+.wrap{width:min(1100px,92%);margin-inline:auto}
+h1,h2,h3{font-family:var(--serif);line-height:1.15;font-weight:700}
+h2{font-size:clamp(1.7rem,4vw,2.4rem);margin-bottom:.4rem}
+.lead{max-width:60ch;margin-bottom:1.8rem;color:#5a4636}
+section{padding:4.5rem 0}
+
+/* ---------- Header / navigation (Flexbox) ---------- */
+header{position:sticky;top:0;z-index:20;background:var(--leaf-dark);color:var(--white)}
+.bar{display:flex;align-items:center;justify-content:space-between;min-height:64px}
+.brand{font-family:var(--serif);font-size:1.4rem;color:var(--white);text-decoration:none;font-weight:700}
+nav ul{display:flex;gap:.4rem;list-style:none}
+nav a{display:block;padding:.5rem .9rem;color:var(--white);text-decoration:none;border-radius:999px;font-size:.95rem}
+nav a:hover,nav a.active{background:rgba(255,255,255,.16)}
+.menu-btn{display:none;background:none;border:1px solid rgba(255,255,255,.5);color:var(--white);padding:.45rem .8rem;border-radius:8px;font-size:1rem;cursor:pointer}
+
+/* ---------- Hero ---------- */
+#home{background:var(--leaf-dark);color:var(--white);padding:3.5rem 0 4.5rem}
+.hero{display:grid;grid-template-columns:1.2fr 1fr;gap:2rem;align-items:center}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);margin-bottom:1rem}
+.hero p{max-width:46ch;color:#d9e6dc;margin-bottom:1.6rem;font-size:1.1rem}
+.btn{display:inline-block;background:var(--turmeric);color:var(--bean);border:none;padding:.8rem 1.4rem;border-radius:999px;font-weight:700;font-size:1rem;text-decoration:none;cursor:pointer}
+.btn:hover{background:#f2c43d}
+.btn.ghost{background:transparent;color:var(--white);border:2px solid rgba(255,255,255,.6);margin-left:.5rem}
+.btn.ghost:hover{background:rgba(255,255,255,.12)}
+.cup{max-width:340px;margin-inline:auto}
+.steam path{fill:none;stroke:#e9f1ea;stroke-width:5;stroke-linecap:round;opacity:0;animation:rise 3.4s ease-in-out infinite}
+.steam path:nth-child(2){animation-delay:1.1s}
+.steam path:nth-child(3){animation-delay:2.2s}
+@keyframes rise{0%{opacity:0;transform:translateY(14px)}35%{opacity:.8}100%{opacity:0;transform:translateY(-26px)}}
+
+/* ---------- Highlights (Grid) ---------- */
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.feature{background:var(--white);border:1px solid var(--steel);border-radius:var(--radius);padding:1.4rem}
+.feature h3{font-size:1.2rem;margin-bottom:.4rem;color:var(--leaf-dark)}
+.feature p{font-size:.97rem;color:#5a4636}
+
+/* ---------- Menu + order ---------- */
+#menu{background:var(--steel-light)}
+.filters{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.2rem}
+.filters button{background:var(--white);border:1.5px solid var(--steel);color:var(--bean);padding:.45rem 1.1rem;border-radius:999px;font-size:.95rem;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--leaf);border-color:var(--leaf);color:var(--white)}
+.order-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:1.5rem;align-items:start}
+.table-box{background:var(--white);border:1px solid var(--steel);border-radius:var(--radius);overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+caption{text-align:left;padding:1rem 1rem .3rem;font-family:var(--serif);font-size:1.15rem;font-weight:700}
+th,td{padding:.75rem 1rem;text-align:left;border-top:1px solid var(--steel-light)}
+th{font-size:.9rem;color:#5a4636;font-weight:600}
+td.price{white-space:nowrap}
+td button{background:var(--leaf);color:var(--white);border:none;border-radius:8px;padding:.35rem .8rem;cursor:pointer;font-size:.9rem}
+td button:hover{background:var(--leaf-dark)}
+.tray{background:var(--white);border:1px solid var(--steel);border-radius:var(--radius);padding:1.2rem;position:sticky;top:84px}
+.tray h3{font-size:1.2rem;margin-bottom:.6rem}
+.tray ul{list-style:none;margin-bottom:.8rem}
+.tray li{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.4rem 0;border-bottom:1px dashed var(--steel);font-size:.95rem}
+.qty{display:flex;align-items:center;gap:.4rem}
+.qty button{width:28px;height:28px;border-radius:50%;border:1px solid var(--steel);background:var(--paper);cursor:pointer;font-size:1rem;line-height:1}
+.total{display:flex;justify-content:space-between;font-weight:700;font-size:1.1rem}
+.empty{color:#7a6552;font-size:.95rem}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- Visit / contact form ---------- */
+.contact{display:grid;grid-template-columns:1fr 1.2fr;gap:2.5rem}
+.contact address{font-style:normal;margin-bottom:1rem}
+form{background:var(--white);border:1px solid var(--steel);border-radius:var(--radius);padding:1.5rem}
+.field{margin-bottom:1rem}
+label{display:block;font-weight:600;margin-bottom:.3rem;font-size:.95rem}
+input,textarea,select{width:100%;padding:.7rem .8rem;border:1.5px solid #9aa6ab;border-radius:10px;font:inherit;background:var(--white);color:var(--bean)}
+input[aria-invalid="true"],textarea[aria-invalid="true"]{border-color:var(--error)}
+input.ok{border-color:var(--leaf)}
+.err{display:block;min-height:1.2em;color:var(--error);font-size:.88rem;margin-top:.25rem}
+.success{display:none;background:#e3f1e6;border:1.5px solid var(--leaf);border-radius:10px;padding:1rem;margin-top:1rem}
+.success.show{display:block}
+
+footer{background:var(--bean);color:#e8dccf;padding:2rem 0;font-size:.92rem}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem}
+footer a{color:var(--turmeric)}
+
+/* ---------- Media queries ---------- */
+@media (max-width:880px){
+  .hero,.order-grid,.contact{grid-template-columns:1fr}
+  .features{grid-template-columns:1fr}
+  .tray{position:static}
+  .cup{max-width:240px;order:-1}
+}
+@media (max-width:700px){
+  .menu-btn{display:block}
+  nav{position:absolute;left:0;right:0;top:100%;background:var(--leaf-dark);display:none;padding:.5rem 4%}
+  nav.open{display:block}
+  nav ul{flex-direction:column}
+  section{padding:3rem 0}
+  .btn.ghost{margin:.6rem 0 0}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .steam path{animation:none;opacity:.6}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="#home">Kaapi Kadai</a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mainNav">Menu</button>
+    <nav id="mainNav" aria-label="Main">
+      <ul>
+        <li><a href="#home" class="active">Home</a></li>
+        <li><a href="#about">Why us</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#visit">Visit</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section id="home">
+    <div class="wrap hero">
+      <div>
+        <h1>Filter coffee, poured hot and strong.</h1>
+        <p>A small coffee house in Erode serving decoction coffee in steel tumblers, with tea and tiffin to go alongside. Pick your order online and collect it at the counter.</p>
+        <a class="btn" href="#menu">See the menu</a>
+        <a class="btn ghost" href="#visit">Find us</a>
+      </div>
+      <svg class="cup" viewBox="0 0 300 300" role="img" aria-label="Steel tumbler and davara with hot filter coffee">
+        <g class="steam" transform="translate(0,0)">
+          <path d="M115 70 q-14 -18 0 -34 q14 -16 0 -32"/>
+          <path d="M150 70 q-14 -18 0 -34 q14 -16 0 -32"/>
+          <path d="M185 70 q-14 -18 0 -34 q14 -16 0 -32"/>
+        </g>
+        <!-- davara (outer bowl) -->
+        <path d="M40 150 h220 l-22 100 q-4 18 -22 18 h-132 q-18 0 -22 -18 z" fill="#c9d1d5"/>
+        <path d="M40 150 h220 l-4 18 h-212 z" fill="#e6ebed"/>
+        <!-- tumbler -->
+        <path d="M95 105 h110 l-10 150 h-90 z" fill="#aeb8bd"/>
+        <path d="M95 105 h110 l-2 14 h-106 z" fill="#e6ebed"/>
+        <ellipse cx="150" cy="105" rx="55" ry="9" fill="#33200f"/>
+        <ellipse cx="150" cy="105" rx="46" ry="6" fill="#6b4226"/>
+        <path d="M112 140 v95" stroke="#fff" stroke-opacity=".5" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <h2>Why people come back</h2>
+      <p class="lead">Three simple things we try to get right every morning.</p>
+      <div class="features">
+        <article class="feature">
+          <h3>Fresh decoction</h3>
+          <p>Coffee powder is brewed in small batches through the day, so every tumbler tastes like the first one.</p>
+        </article>
+        <article class="feature">
+          <h3>Quick pick-up</h3>
+          <p>Build your order on this page, send your pick-up time and the counter has it ready when you arrive.</p>
+        </article>
+        <article class="feature">
+          <h3>Open for study breaks</h3>
+          <p>Seats, a fan and good light. Students and office workers are welcome to stay for a while.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="menu">
+    <div class="wrap">
+      <h2>Today’s menu</h2>
+      <p class="lead">Choose a category, then press Add to put an item in your tray.</p>
+      <div class="filters" role="group" aria-label="Filter menu by category">
+        <button type="button" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" data-filter="coffee" aria-pressed="false">Coffee</button>
+        <button type="button" data-filter="tea" aria-pressed="false">Tea</button>
+        <button type="button" data-filter="snack" aria-pressed="false">Snacks</button>
+      </div>
+
+      <div class="order-grid">
+        <div class="table-box">
+          <table id="menuTable">
+            <caption>Menu and prices</caption>
+            <thead>
+              <tr><th scope="col">Item</th><th scope="col">Price</th><th scope="col"><span class="sr">Order</span></th></tr>
+            </thead>
+            <tbody>
+              <tr data-cat="coffee" data-name="Filter coffee" data-price="25"><td>Filter coffee</td><td class="price">₹25</td><td><button type="button">Add</button></td></tr>
+              <tr data-cat="coffee" data-name="Strong decoction coffee" data-price="35"><td>Strong decoction coffee</td><td class="price">₹35</td><td><button type="button">Add</button></td></tr>
+              <tr data-cat="coffee" data-name="Cold coffee" data-price="60"><td>Cold coffee</td><td class="price">₹60</td><td><button type="button">Add</button></td></tr>
+              <tr data-cat="tea" data-name="Ginger tea" data-price="20"><td>Ginger tea</td><td class="price">₹20</td><td><button type="button">Add</button></td></tr>
+              <tr data-cat="tea" data-name="Masala tea" data-price="25"><td>Masala tea</td><td class="price">₹25</td><td><button type="button">Add</button></td></tr>
+              <tr data-cat="tea" data-name="Black tea" data-price="15"><td>Black tea</td><td class="price">₹15</td><td><button type="button">Add</button></td></tr>
+              <tr data-cat="snack" data-name="Medu vada" data-price="25"><td>Medu vada</td><td class="price">₹25</td><td><button type="button">Add</button></td></tr>
+              <tr data-cat="snack" data-name="Banana bajji" data-price="30"><td>Banana bajji</td><td class="price">₹30</td><td><button type="button">Add</button></td></tr>
+              <tr data-cat="snack" data-name="Mysore pak" data-price="40"><td>Mysore pak</td><td class="price">₹40</td><td><button type="button">Add</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <aside class="tray" aria-live="polite">
+          <h3>Your tray</h3>
+          <p class="empty" id="emptyMsg">Nothing added yet. Press Add next to an item.</p>
+          <ul id="trayList"></ul>
+          <div class="total"><span>Total</span><span id="totalAmt">₹0</span></div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section id="visit">
+    <div class="wrap contact">
+      <div>
+        <h2>Send your pick-up request</h2>
+        <p class="lead">Fill in your details and we will keep your tray ready at the counter.</p>
+        <address>
+          Kaapi Kadai<br>
+          Sakthi Road, Erode – 638 003<br>
+          Open daily, 7:00 am to 9:00 pm
+        </address>
+        <p>Questions? Write to <a href="mailto:hello@example.com">hello@example.com</a>.</p>
+      </div>
+
+      <form id="orderForm" novalidate>
+        <div class="field">
+          <label for="name">Your name</label>
+          <input id="name" name="name" type="text" autocomplete="name" aria-describedby="nameErr">
+          <span class="err" id="nameErr"></span>
+        </div>
+        <div class="field">
+          <label for="phone">Mobile number</label>
+          <input id="phone" name="phone" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel" aria-describedby="phoneErr">
+          <span class="err" id="phoneErr"></span>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" aria-describedby="emailErr">
+          <span class="err" id="emailErr"></span>
+        </div>
+        <div class="field">
+          <label for="time">Pick-up time</label>
+          <input id="time" name="time" type="time" min="07:00" max="21:00" aria-describedby="timeErr">
+          <span class="err" id="timeErr"></span>
+        </div>
+        <div class="field">
+          <label for="note">Note for the counter (optional)</label>
+          <textarea id="note" name="note" rows="3" maxlength="160"></textarea>
+        </div>
+        <button class="btn" type="submit">Send request</button>
+        <div class="success" id="success" role="status"></div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>© 2026 Kaapi Kadai. Sample project built during inplant training at Ensemble Nexgen, Erode.</p>
+    <p><a href="#home">Back to top</a></p>
+  </div>
+</footer>
+
+<script>
+/* ---------- Mobile navigation ---------- */
+const menuBtn = document.getElementById('menuBtn');
+const mainNav = document.getElementById('mainNav');
+menuBtn.addEventListener('click', () => {
+  const open = mainNav.classList.toggle('open');
+  menuBtn.setAttribute('aria-expanded', open);
+});
+mainNav.addEventListener('click', e => {
+  if (e.target.tagName === 'A') {
+    mainNav.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+  }
+});
+
+/* ---------- Highlight the nav link of the section in view ---------- */
+const links = [...document.querySelectorAll('nav a')];
+const sections = links.map(a => document.querySelector(a.getAttribute('href')));
+function markActive() {
+  const y = window.scrollY + 120;
+  let current = 0;
+  sections.forEach((s, i) => { if (s.offsetTop <= y) current = i; });
+  links.forEach((a, i) => a.classList.toggle('active', i === current));
+}
+window.addEventListener('scroll', markActive, { passive: true });
+markActive();
+
+/* ---------- Menu filter ---------- */
+const filterBtns = document.querySelectorAll('.filters button');
+const rows = document.querySelectorAll('#menuTable tbody tr');
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.setAttribute('aria-pressed', b === btn));
+    const f = btn.dataset.filter;
+    rows.forEach(r => { r.hidden = !(f === 'all' || r.dataset.cat === f); });
+  });
+});
+
+/* ---------- Tray (add, change quantity, total) ---------- */
+const tray = {};                       // name -> { price, qty }
+const trayList = document.getElementById('trayList');
+const totalAmt = document.getElementById('totalAmt');
+const emptyMsg = document.getElementById('emptyMsg');
+
+function trayTotal() {
+  return Object.values(tray).reduce((sum, it) => sum + it.price * it.qty, 0);
+}
+function renderTray() {
+  trayList.innerHTML = '';
+  const names = Object.keys(tray);
+  emptyMsg.style.display = names.length ? 'none' : 'block';
+  names.forEach(name => {
+    const li = document.createElement('li');
+    const label = document.createElement('span');
+    label.textContent = name;
+    const qty = document.createElement('span');
+    qty.className = 'qty';
+    const minus = document.createElement('button');
+    minus.type = 'button'; minus.textContent = '−';
+    minus.setAttribute('aria-label', 'Remove one ' + name);
+    const count = document.createElement('span');
+    count.textContent = tray[name].qty;
+    const plus = document.createElement('button');
+    plus.type = 'button'; plus.textContent = '+';
+    plus.setAttribute('aria-label', 'Add one more ' + name);
+    minus.addEventListener('click', () => changeQty(name, -1));
+    plus.addEventListener('click', () => changeQty(name, 1));
+    qty.append(minus, count, plus);
+    li.append(label, qty);
+    trayList.appendChild(li);
+  });
+  totalAmt.textContent = '₹' + trayTotal();
+}
+function changeQty(name, delta) {
+  tray[name].qty += delta;
+  if (tray[name].qty <= 0) delete tray[name];
+  renderTray();
+}
+rows.forEach(r => {
+  r.querySelector('button').addEventListener('click', () => {
+    const name = r.dataset.name;
+    if (tray[name]) tray[name].qty += 1;
+    else tray[name] = { price: Number(r.dataset.price), qty: 1 };
+    renderTray();
+  });
+});
+renderTray();
+
+/* ---------- Form validation ---------- */
+const form = document.getElementById('orderForm');
+const success = document.getElementById('success');
+
+const rules = {
+  name: v => v.trim().length < 3 ? 'Enter your name, at least 3 letters.'
+          : !/^[A-Za-z .]+$/.test(v.trim()) ? 'Use letters only in your name.' : '',
+  phone: v => !/^[6-9]\d{9}$/.test(v) ? 'Enter a 10-digit mobile number starting with 6, 7, 8 or 9.' : '',
+  email: v => !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? 'Enter a valid email, for example name@example.com.' : '',
+  time: v => {
+    if (!v) return 'Choose a pick-up time.';
+    return (v < '07:00' || v > '21:00') ? 'We are open from 7:00 am to 9:00 pm.' : '';
+  }
+};
+
+function check(id) {
+  const input = document.getElementById(id);
+  const msg = rules[id](input.value);
+  document.getElementById(id + 'Err').textContent = msg;
+  input.setAttribute('aria-invalid', msg ? 'true' : 'false');
+  input.classList.toggle('ok', !msg);
+  return !msg;
+}
+Object.keys(rules).forEach(id => {
+  const input = document.getElementById(id);
+  input.addEventListener('blur', () => check(id));
+  input.addEventListener('input', () => { if (input.getAttribute('aria-invalid') === 'true') check(id); });
+});
+document.getElementById('phone').addEventListener('input', e => {
+  e.target.value = e.target.value.replace(/\D/g, '');
+});
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  success.classList.remove('show');
+  const results = Object.keys(rules).map(check);
+  if (results.includes(false)) {
+    document.querySelector('[aria-invalid="true"]').focus();
+    return;
+  }
+  const first = document.getElementById('name').value.trim().split(' ')[0];
+  const total = trayTotal();
+  const items = Object.keys(tray).length;
+  success.textContent = items
+    ? 'Thank you, ' + first + '. Your request for ' + items + ' item' + (items > 1 ? 's' : '') + ' (₹' + total + ') is received. Pay at the counter when you collect it.'
+    : 'Thank you, ' + first + '. We have your request. Add items from the menu to have them ready at pick-up.';
+  success.classList.add('show');
+  form.reset();
+  form.querySelectorAll('input').forEach(i => { i.classList.remove('ok'); i.removeAttribute('aria-invalid'); });
+});
+</script>
+</body>
+</html>
